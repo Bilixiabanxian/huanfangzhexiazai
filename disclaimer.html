@@ -1,0 +1,144 @@
+import React, { useState } from 'react';
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('disclaimer');
+
+  const tabs = [
+    { id: 'disclaimer', label: '免责声明' },
+    { id: 'privacy', label: '隐私政策' },
+    { id: 'terms', label: '服务条款' },
+    { id: 'contact', label: '联系我们' }
+  ];
+
+  const content = {
+    disclaimer: (
+      <div className="prose max-w-none">
+        <h2>免责声明</h2>
+        <p>本网站提供的《Minecraft》（我的世界）相关资源均来自网络收集与用户分享，仅供个人学习和研究使用，不得用于任何商业用途。</p>
+        <p>我们不保证所提供内容的合法性、安全性、准确性。下载及使用相关资源时，请遵守当地法律法规，并自行承担一切法律风险。</p>
+        <p>所有资源版权归原作者所有，如涉及版权问题，请立即联系管理员处理。我们将及时删除侵权内容。</p>
+      </div>
+    ),
+    privacy: (
+      <div className="prose max-w-none">
+        <h2>隐私政策</h2>
+        <p>我们非常重视您的隐私保护。在您访问或使用本网站的过程中，我们可能会收集以下信息：</p>
+        <ul>
+          <li>IP地址与访问日志</li>
+          <li>浏览器类型与设备信息</li>
+          <li>页面浏览数据与交互行为</li>
+        </ul>
+        <p>我们承诺不会向第三方出售您的个人信息。所有数据仅用于网站优化与安全防护。我们采用基本的安全措施来保护您的信息，但无法确保100%的数据安全。</p>
+        <p>通过继续使用本服务，即表示您已理解并同意本隐私政策的内容。</p>
+      </div>
+    ),
+    terms: (
+      <div className="prose max-w-none">
+        <h2>服务条款</h2>
+        <p>欢迎使用本网站！在使用前，请仔细阅读以下服务条款：</p>
+        <ol>
+          <li>您必须年满13岁才能使用本网站</li>
+          <li>禁止恶意爬虫、自动化脚本或大规模请求</li>
+          <li>禁止发布违法、侵权或不当内容</li>
+          <li>我们保留随时修改服务条款的权利</li>
+          <li>您有责任保管好自己的账号信息</li>
+        </ol>
+        <p>违反上述条款可能导致您的访问权限被限制或终止。我们保留在不事先通知的情况下移除内容或暂停服务的权利。</p>
+      </div>
+    ),
+    contact: (
+      <div className="max-w-md mx-auto">
+        <h2 className="text-2xl font-bold mb-4 text-center">联系我们</h2>
+        <form className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium mb-1">姓名</label>
+            <input type="text" id="name" className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="请输入您的姓名" />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium mb-1">邮箱</label>
+            <input type="email" id="email" className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="请输入您的邮箱" />
+          </div>
+          <div>
+            <label htmlFor="message" className="block text-sm font-medium mb-1">留言</label>
+            <textarea id="message" rows={4} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="请留下您的意见或建议"></textarea>
+          </div>
+          <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+            提交反馈
+          </button>
+        </form>
+      </div>
+    )
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 9H21V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 9L12 4L21 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 12V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <h1 className="text-2xl font-bold">MC资源站声明</h1>
+            </div>
+            <p className="text-blue-100 max-w-md">本网站为《Minecraft》玩家提供资源交流平台，所有内容均受相关法律保护</p>
+          </div>
+        </div>
+      </header>
+
+      {/* Tabs Navigation */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="border-b border-gray-200 mb-6">
+          <nav className="-mb-px flex space-x-8 overflow-x-auto">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === tab.id
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/* Content Area */}
+        <div className="bg-white rounded-xl shadow-lg p-6 animate-fadeIn">
+          {content[activeTab]}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-white border-t mt-12">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="text-gray-600 text-sm">
+              © 2023 MC资源站声明 | 遵守相关法律法规
+            </div>
+            <div className="mt-4 md:mt-0">
+              <a href="#" className="text-gray-500 hover:text-blue-500 text-sm mr-4">帮助中心</a>
+              <a href="#" className="text-gray-500 hover:text-blue-500 text-sm">意见反馈</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+      `}</style>
+    </div>
+  );
+}
