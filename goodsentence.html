@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>每日金句</title>
+  <script src="https://cdn.tailwindcss.com"></script> 
+</head>
+<body id="app-body" class="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4 transition-colors duration-700">
+  <div class="w-full max-w-2xl rounded-xl bg-white/90 p-6 shadow-xl backdrop-blur-sm md:p-8">
+    <h1 class="mb-6 text-center text-2xl font-bold text-gray-800">每日金句</h1>
+
+    <!-- 金句展示框 -->
+    <div id="quote-container" class="relative mb-6 overflow-hidden rounded-lg border border-gray-200 bg-white px-6 py-8 shadow-md transition-all duration-300 ease-in-out md:px-8 md:py-10">
+      <blockquote id="quote-text" class="text-center text-lg font-light italic text-gray-700 transition-opacity duration-300 opacity-100">
+        “加载中...”
+      </blockquote>
+      <p id="quote-author" class="mt-4 text-center text-sm font-medium text-gray-500">
+        —— 加载中...
+      </p>
+    </div>
+
+    <!-- 输入框与按钮 -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <input
+        type="text"
+        id="quote-input"
+        readonly
+        value="点击“换一换”随机显示金句"
+        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        placeholder="点击“换一换”随机显示金句"
+      />
+      <button
+        onclick="randomQuoteAndBackground()"
+        id="change-button"
+        class="whitespace-nowrap rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        换一换
+      </button>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="mt-6 text-center text-xs text-gray-400">
+      每天一句励志语录，点亮心灵之光 💡
+    </div>
+  </div>
+
+  <script>
+    const quotes = [
+      {
+        text: "成功不是将来才有的，而是从决定去做的那一刻起，持续累积而成。",
+        author: "俞敏洪",
+      },
+      {
+        text: "生活不可能像你想象得那么好，但也不会像你想象得那么糟。",
+        author: "莫言",
+      },
+      {
+        text: "你若有一个不屈的灵魂，脚下就会有一片坚实的土地。",
+        author: "汪国真",
+      },
+      {
+        text: "不要等待机会，而要创造机会。",
+        author: "培根",
+      },
+      {
+        text: "即使跌倒一百次，也要一百零一次地站起来。",
+        author: "张海迪",
+      },
+    ];
+
+    // 配置多个背景样式
+    const backgrounds = [
+      { bodyClass: 'bg-gradient-to-br from-blue-50 to-indigo-100' },
+      { bodyClass: 'bg-gradient-to-br from-green-50 to-teal-100' },
+      { bodyClass: 'bg-gradient-to-br from-pink-50 to-red-100' },
+      { bodyClass: 'bg-gradient-to-br from-yellow-50 to-orange-100' },
+      { bodyClass: 'bg-gradient-to-br from-purple-50 to-pink-100' },
+    ];
+
+    let currentQuoteIndex = 0;
+    let currentBgIndex = 0;
+    let isAnimating = false;
+
+    function randomQuoteAndBackground() {
+      if (isAnimating) return;
+
+      const quoteContainer = document.getElementById("quote-container");
+      const quoteText = document.getElementById("quote-text");
+      const quoteAuthor = document.getElementById("quote-author");
+      const quoteInput = document.getElementById("quote-input");
+      const changeButton = document.getElementById("change-button");
+      const appBody = document.getElementById("app-body");
+
+      isAnimating = true;
+      quoteContainer.classList.add("opacity-0", "translate-y-2");
+      quoteText.classList.add("opacity-0");
+      changeButton.disabled = true;
+
+      setTimeout(() => {
+        // 随机选择不同的金句和背景
+        let newQuoteIndex, newBgIndex;
+        do {
+          newQuoteIndex = Math.floor(Math.random() * quotes.length);
+        } while (newQuoteIndex === currentQuoteIndex);
+
+        do {
+          newBgIndex = Math.floor(Math.random() * backgrounds.length);
+        } while (newBgIndex === currentBgIndex);
+
+        currentQuoteIndex = newQuoteIndex;
+        currentBgIndex = newBgIndex;
+
+        // 更新金句内容
+        quoteText.textContent = "“" + quotes[newQuoteIndex].text + "”";
+        quoteAuthor.textContent = "—— " + quotes[newQuoteIndex].author;
+        quoteInput.value = quotes[newQuoteIndex].text;
+
+        // 切换背景颜色
+        appBody.className = `flex min-h-screen items-center justify-center p-4 ${backgrounds[newBgIndex].bodyClass} transition-colors duration-700`;
+
+        // 动画恢复
+        quoteContainer.classList.remove("opacity-0", "translate-y-2");
+        quoteText.classList.remove("opacity-0");
+        quoteContainer.classList.add("transition-all", "duration-500");
+        quoteText.classList.add("transition-opacity", "duration-500");
+
+        isAnimating = false;
+        changeButton.disabled = false;
+      }, 300);
+    }
+
+    // 初始化加载第一句
+    window.onload = () => {
+      randomQuoteAndBackground();
+    };
+  </script>
+</body>
+</html>
