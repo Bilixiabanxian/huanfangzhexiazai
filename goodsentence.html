@@ -5,14 +5,110 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>每日金句</title>
   <script src="https://cdn.tailwindcss.com"></script> 
+
+  <style>
+    /* 背景流动动画 */
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .bg-flow {
+      background-size: 200% 200%;
+      animation: gradientFlow 15s ease infinite;
+    }
+
+    /* 输入框动态边框 */
+    .input-border {
+      position: relative;
+    }
+
+    .input-border::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, currentColor, transparent);
+      transition: width 0.4s ease;
+      pointer-events: none;
+    }
+
+    .input-border:hover::after,
+    .input-border:focus-within::after {
+      width: 100%;
+    }
+
+    /* 按钮微光效果 */
+    .btn-glow:hover {
+      box-shadow: 0 0 15px rgba(129, 140, 248, 0.5);
+    }
+
+    /* 卡片阴影增强 */
+    .card-shadow {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 夜间模式样式 */
+    .dark-mode {
+      background: radial-gradient(circle at top left, #1a202c, #0d1117) !important;
+      color: #e2e8f0;
+    }
+
+    .dark-mode .bg-white\/90 {
+      background-color: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-mode .text-gray-800 {
+      color: #e2e8f0;
+    }
+
+    .dark-mode .border-gray-200 {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-mode .bg-gray-50 {
+      background-color: #1e293b;
+    }
+
+    .dark-mode .text-gray-600 {
+      color: #cbd5e1;
+    }
+
+    .dark-mode .text-gray-500 {
+      color: #94a3b8;
+    }
+
+    .dark-mode .text-gray-400 {
+      color: #64748b;
+    }
+
+    .dark-mode .focus\:ring-indigo-500:focus {
+      --tw-ring-color: #818cf8;
+    }
+
+    .dark-mode .hover\:bg-indigo-700:hover {
+      background-color: #6366f1;
+    }
+
+    .dark-mode .bg-indigo-600 {
+      background-color: #4f46e5;
+    }
+  </style>
 </head>
-<body id="app-body" class="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4 transition-colors duration-700">
-  <div class="w-full max-w-2xl rounded-xl bg-white/90 p-6 shadow-xl backdrop-blur-sm md:p-8">
+<body id="app-body"
+      class="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 bg-flow p-4 transition-all duration-1000">
+
+  <!-- 主体卡片 -->
+  <div class="w-full max-w-2xl rounded-xl bg-white/90 p-6 shadow-xl backdrop-blur-sm md:p-8 card-shadow">
     <h1 class="mb-6 text-center text-2xl font-bold text-gray-800">每日金句</h1>
 
     <!-- 金句展示框 -->
-    <div id="quote-container" class="relative mb-6 overflow-hidden rounded-lg border border-gray-200 bg-white px-6 py-8 shadow-md transition-all duration-300 ease-in-out md:px-8 md:py-10">
-      <blockquote id="quote-text" class="text-center text-lg font-light italic text-gray-700 transition-opacity duration-300 opacity-100">
+    <div id="quote-container" class="relative mb-6 overflow-hidden rounded-lg border border-gray-200 bg-white px-6 py-8 shadow-md transition-all duration-500 md:px-8 md:py-10">
+      <blockquote id="quote-text" class="text-center text-lg font-light italic text-gray-700 transition-opacity duration-500 opacity-100">
         “加载中...”
       </blockquote>
       <p id="quote-author" class="mt-4 text-center text-sm font-medium text-gray-500">
@@ -21,7 +117,7 @@
     </div>
 
     <!-- 输入框与按钮 -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 input-border">
       <input
         type="text"
         id="quote-input"
@@ -33,258 +129,52 @@
       <button
         onclick="randomQuoteAndBackground()"
         id="change-button"
-        class="whitespace-nowrap rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        class="whitespace-nowrap rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 btn-glow"
       >
         换一换
       </button>
     </div>
 
+    <!-- 日夜模式切换 -->
+    <div class="mt-6 flex justify-end">
+      <button
+        onclick="toggleDarkMode()"
+        class="rounded-md bg-gray-200 px-3 py-1 text-xs font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300">
+        切换夜间模式
+      </button>
+    </div>
+
     <!-- 底部提示 -->
-    <div class="mt-6 text-center text-xs text-gray-400">
+    <div class="mt-4 text-center text-xs text-gray-400">
       每天一句励志语录，点亮心灵之光 💡
     </div>
   </div>
 
   <script>
+    // 📚 金句数据
     const quotes = [
-      {
-        text: "成功不是将来才有的，而是从决定去做的那一刻起，持续累积而成。",
-        author: "俞敏洪",
-      },
-      {
-        text: "生活不可能像你想象得那么好，但也不会像你想象得那么糟。",
-        author: "莫言",
-      },
-      {
-        text: "你若有一个不屈的灵魂，脚下就会有一片坚实的土地。",
-        author: "汪国真",
-      },
-      {
-        text: "不要等待机会，而要创造机会。",
-        author: "培根",
-      },
-      {
-        text: "即使跌倒一百次，也要一百零一次地站起来。",
-        author: "张海迪",
-      },
-      {
-        text: "生存还是毁灭，这是一个问题。",
-        author: "威廉·莎士比亚《哈姆雷特》",
-      },
-      {
-        text: "世界上只有一种真正的英雄主义，那就是认清生活的真相后依然热爱生活。",
-        author: "罗曼·罗兰",
-      },
-      {
-        text: "黑夜给了我黑色的眼睛，我却用它寻找光明。",
-        author: "顾城",
-      },
-      {
-        text: "人生而自由，却无往不在枷锁之中。",
-        author: "卢梭",
-      },
-      {
-        text: "不在沉默中爆发，就在沉默中灭亡。",
-        author: "鲁迅",
-      },
-      {
-        text: "爱是恒久忍耐，又有恩慈。",
-        author: "《圣经·哥林多前书》",
-      },
-      {
-        text: "一个人可以被毁灭，但不能被打败。",
-        author: "海明威《老人与海》",
-      },
-      {
-        text: "生命就像一盒巧克力，你永远不知道下一颗是什么味道。",
-        author: "《阿甘正传》",
-      },
-      {
-        text: "世界上有两样东西能震撼人们的心灵：一是我们头顶浩瀚的星空，二是我们心中崇高的道德法则。",
-        author: "康德",
-      },
-      {
-        text: "所有的伟大都源于一个勇敢的开始。",
-        author: "马丁·路德·金",
-      },
-      {
-        text: "岁月不饶人，我亦未曾饶过岁月。",
-        author: "木心",
-      },
-      {
-        text: "生活不止眼前的苟且，还有诗和远方。",
-        author: "高晓松",
-      },
-      {
-        text: "世界上最大的监狱，是人的大脑。",
-        author: "埃隆·马斯克",
-      },
-      {
-        text: "每一个不曾起舞的日子，都是对生命的辜负。",
-        author: "尼采",
-      },
-      {
-        text: "愿你出走半生，归来仍是少年。",
-        author: "苏轼（化用）",
-      },
-      {
-        text: "人生如逆旅，我亦是行人。",
-        author: "苏轼",
-      },
-      {
-        text: "自由不是随心所欲，而是自我主宰。",
-        author: "康德",
-      },
-      {
-        text: "过去都是假的，回忆没有归路。",
-        author: "加西亚·马尔克斯《百年孤独》",
-      },
-      {
-        text: "我们都在阴沟里，但仍有人仰望星空。",
-        author: "王尔德",
-      },
-      {
-        text: "世界上只有一种成功，那就是用自己喜欢的方式度过一生。",
-        author: "莫言",
-      },
-      {
-        text: "世界上本没有路，走的人多了，也便成了路。",
-        author: "鲁迅",
-      },
-      {
-        text: "时间就像海绵里的水，只要愿挤，总还是有的。",
-        author: "鲁迅",
-      },
-      {
-        text: "真正的勇士敢于直面惨淡的人生，敢于正视淋漓的鲜血。",
-        author: "鲁迅",
-      },
-      {
-        text: "人生最大的痛苦莫过于梦醒时发现无路可走。",
-        author: "鲁迅",
-      },
-      {
-        text: "生命诚可贵，爱情价更高，若为自由故，二者皆可抛。",
-        author: "裴多菲",
-      },
-      {
-        text: "天行健，君子以自强不息；地势坤，君子以厚德载物。",
-        author: "《周易》",
-      },
-      {
-        text: "己所不欲，勿施于人。",
-        author: "孔子",
-      },
-      {
-        text: "三人行，必有我师焉。",
-        author: "孔子",
-      },
-      {
-        text: "学而不思则罔，思而不学则殆。",
-        author: "孔子",
-      },
-      {
-        text: "知之为知之，不知为不知，是知也。",
-        author: "孔子",
-      },
-      {
-        text: "道可道，非常道；名可名，非常名。",
-        author: "老子《道德经》",
-      },
-      {
-        text: "上善若水，水善利万物而不争。",
-        author: "老子《道德经》",
-      },
-      {
-        text: "千里之行，始于足下。",
-        author: "老子《道德经》",
-      },
-      {
-        text: "天下难事，必作于易；天下大事，必作于细。",
-        author: "老子《道德经》",
-      },
-      {
-        text: "人生自古谁无死，留取丹心照汗青。",
-        author: "文天祥",
-      },
-      {
-        text: "先天下之忧而忧，后天下之乐而乐。",
-        author: "范仲淹",
-      },
-      {
-        text: "不以物喜，不以己悲。",
-        author: "范仲淹",
-      },
-      {
-        text: "山不在高，有仙则名；水不在深，有龙则灵。",
-        author: "刘禹锡",
-      },
-      {
-        text: "天生我材必有用，千金散尽还复来。",
-        author: "李白",
-      },
-      {
-        text: "长风破浪会有时，直挂云帆济沧海。",
-        author: "李白",
-      },
-      {
-        text: "安能摧眉折腰事权贵，使我不得开心颜。",
-        author: "李白",
-      },
-      {
-        text: "会当凌绝顶，一览众山小。",
-        author: "杜甫",
-      },
-      {
-        text: "读书破万卷，下笔如有神。",
-        author: "杜甫",
-      },
-      {
-        text: "海内存知己，天涯若比邻。",
-        author: "王勃",
-      },
-      {
-        text: "落霞与孤鹜齐飞，秋水共长天一色。",
-        author: "王勃",
-      },
-      {
-        text: "欲穷千里目，更上一层楼。",
-        author: "王之涣",
-      },
-      {
-        text: "春蚕到死丝方尽，蜡炬成灰泪始干。",
-        author: "李商隐",
-      },
-      {
-        text: "身无彩凤双飞翼，心有灵犀一点通。",
-        author: "李商隐",
-      },
-      {
-        text: "问君能有几多愁？恰似一江春水向东流。",
-        author: "李煜",
-      },
-      {
-        text: "剪不断，理还乱，是离愁。别是一般滋味在心头。",
-        author: "李煜",
-      },
+      { text: "成功不是将来才有的，而是从决定去做的那一刻起，持续累积而成。", author: "俞敏洪" },
+      { text: "生活不可能像你想象得那么好，但也不会像你想象得那么糟。", author: "莫言" },
+      { text: "你若有一个不屈的灵魂，脚下就会有一片坚实的土地。", author: "汪国真" },
+      { text: "不要等待机会，而要创造机会。", author: "培根" },
+      { text: "即使跌倒一百次，也要一百零一次地站起来。", author: "张海迪" },
     ];
 
-    // 配置多个背景样式
+    // 🎨 背景配色方案
     const backgrounds = [
-      { bodyClass: 'bg-gradient-to-br from-blue-50 to-indigo-100' },
-      { bodyClass: 'bg-gradient-to-br from-green-50 to-teal-100' },
-      { bodyClass: 'bg-gradient-to-br from-pink-50 to-red-100' },
-      { bodyClass: 'bg-gradient-to-br from-yellow-50 to-orange-100' },
-      { bodyClass: 'bg-gradient-to-br from-purple-50 to-pink-100' },
+      { cls: 'from-blue-50 via-indigo-100 to-purple-200' },
+      { cls: 'from-green-50 via-teal-100 to-cyan-200' },
+      { cls: 'from-pink-50 via-red-100 to-orange-200' },
+      { cls: 'from-yellow-50 via-amber-100 to-orange-200' },
+      { cls: 'from-purple-50 via-pink-100 to-rose-200' },
     ];
 
-    let currentQuoteIndex = 0;
-    let currentBgIndex = 0;
-    let isAnimating = false;
+    // ✅ 定义状态变量
+    let currentQuoteIndex = 0;     // 当前显示的金句索引
+    let currentBgIndex = -1;       // 当前背景索引（初始为 -1）
 
+    // 💡 切换金句和背景函数
     function randomQuoteAndBackground() {
-      if (isAnimating) return;
-
       const quoteContainer = document.getElementById("quote-container");
       const quoteText = document.getElementById("quote-text");
       const quoteAuthor = document.getElementById("quote-author");
@@ -292,14 +182,13 @@
       const changeButton = document.getElementById("change-button");
       const appBody = document.getElementById("app-body");
 
-      isAnimating = true;
+      changeButton.disabled = true;
       quoteContainer.classList.add("opacity-0", "translate-y-2");
       quoteText.classList.add("opacity-0");
-      changeButton.disabled = true;
 
       setTimeout(() => {
-        // 随机选择不同的金句和背景
         let newQuoteIndex, newBgIndex;
+
         do {
           newQuoteIndex = Math.floor(Math.random() * quotes.length);
         } while (newQuoteIndex === currentQuoteIndex);
@@ -311,26 +200,32 @@
         currentQuoteIndex = newQuoteIndex;
         currentBgIndex = newBgIndex;
 
-        // 更新金句内容
-        quoteText.textContent = "“" + quotes[newQuoteIndex].text + "”";
-        quoteAuthor.textContent = "—— " + quotes[newQuoteIndex].author;
+        // 更新页面内容
+        quoteText.textContent = `“${quotes[newQuoteIndex].text}”`;
+        quoteAuthor.textContent = `—— ${quotes[newQuoteIndex].author}`;
         quoteInput.value = quotes[newQuoteIndex].text;
 
-        // 切换背景颜色
-        appBody.className = `flex min-h-screen items-center justify-center p-4 ${backgrounds[newBgIndex].bodyClass} transition-colors duration-700`;
+        // 🔁 保留 dark-mode 类
+        const isDarkMode = appBody.classList.contains('dark-mode');
+        const baseClasses = 'flex min-h-screen items-center justify-center p-4 bg-flow transition-colors duration-1000';
+        const backgroundClass = `bg-gradient-to-br ${backgrounds[newBgIndex].cls}`;
 
-        // 动画恢复
+        appBody.className = `${baseClasses} ${backgroundClass}` + (isDarkMode ? ' dark-mode' : '');
+
+        // 恢复动画
         quoteContainer.classList.remove("opacity-0", "translate-y-2");
         quoteText.classList.remove("opacity-0");
-        quoteContainer.classList.add("transition-all", "duration-500");
-        quoteText.classList.add("transition-opacity", "duration-500");
-
-        isAnimating = false;
         changeButton.disabled = false;
       }, 300);
     }
 
-    // 初始化加载第一句
+    // 🌞🌙 切换夜间模式
+    function toggleDarkMode() {
+      const body = document.body;
+      body.classList.toggle("dark-mode");
+    }
+
+    // 🚀 页面加载时初始化
     window.onload = () => {
       randomQuoteAndBackground();
     };
