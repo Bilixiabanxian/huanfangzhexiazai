@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>每日笑话</title>
+  <style>
+    /* Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to bottom right, #4f46e5, #8b5cf6);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: #333;
+      transition: background 1s ease;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      overflow: hidden;
+      transform: scale(1);
+      transition: transform 0.6s ease;
+    }
+
+    .card.flipping {
+      transform: scale(0.95) rotateY(180deg);
+    }
+
+    .card-body {
+      padding: 2rem;
+      position: relative;
+    }
+
+    .category-tag {
+      display: inline-block;
+      background-color: #dbeafe;
+      color: #3730a3;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .joke-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #1f2937;
+      margin-bottom: 1rem;
+    }
+
+    .joke-content {
+      white-space: pre-line;
+      line-height: 1.6;
+      color: #4b5563;
+      min-height: 120px;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 1rem;
+    }
+
+    .nav-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 9999px;
+      transition: background 0.3s ease;
+    }
+
+    .nav-button:hover {
+      background-color: #f3f4f6;
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      fill: #4b5563;
+    }
+
+    .counter {
+      text-align: center;
+      font-size: 0.875rem;
+      color: #9ca3af;
+    }
+
+    .counter strong {
+      color: #374151;
+    }
+
+    .footer-hint {
+      margin-top: 1.5rem;
+      text-align: center;
+      color: white;
+      opacity: 0.8;
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 600px) {
+      .joke-title {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card" id="jokeCard">
+      <div class="card-body">
+        <div class="flex justify-between items-center mb-4">
+          <span class="category-tag" id="jokeNumber">#1</span>
+          <span class="category-tag" id="jokeCategory">程序员</span>
+        </div>
+        <h2 class="joke-title" id="jokeTitle">笑话标题</h2>
+        <div class="joke-content" id="jokeContent">笑话内容</div>
+        <div class="navigation">
+          <button class="nav-button" onclick="prevJoke()" aria-label="上一个笑话">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <div class="counter">
+            笑话 <strong id="jokeCounter">1/6</strong>
+          </div>
+          <button class="nav-button" onclick="nextJoke()" aria-label="下一个笑话">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-hint">
+      点击左右箭头浏览更多笑话 😄
+    </div>
+  </div>
+
+  <script>
+    const jokes = [
+      {
+        title: "程序员买水果",
+        content: "老板问：要啥水果？\n程序员答：来个哈密瓜！\n老板：多少斤？\n程序员：8bit吧。\n老板懵了：啥意思？\n程序员：我也不知道，就是想说点二进制相关的。",
+        category: "程序员"
+      },
+      {
+        title: "猫和电脑",
+        content: "为什么猫咪喜欢在键盘上睡觉？\n因为那是它最喜欢的工作站（爪位）！",
+        category: "科技"
+      },
+      {
+        title: "健身的代价",
+        content: "朋友去健身房3个月后：\n问：你练得怎么样了？\n答：肌肉倒是没长多少，医院单倒是攒了一抽屉。",
+        category: "生活"
+      },
+      {
+        title: "数学家结婚",
+        content: "数学家结婚时被问：\n'你愿意永远爱她、尊重她、服从她吗？'\n他犹豫了一下：\n'等一下，我要先看看题目的条件和要求...'",
+        category: "学习"
+      },
+      {
+        title: "咖啡与代码",
+        content: "程序员的三句情话：\n1. 我比IE浏览器兼容性好，除了你的bug谁都容得下。\n2. 你就像我的代码，每次看都有新发现。\n3. 如果你是JavaScript，那我一定是React——没有你我就什么都不是。",
+        category: "程序员"
+      },
+      {
+        title: "外卖迟到",
+        content: "外卖小哥迟到了一小时，我说：\n'你是不是绕地球一圈才过来？'\n他说：\n'差不多吧，我骑的是共享单车，刚从黑洞回来。'",
+        category: "生活"
+      }
+    ];
+
+    let jokeIndex = 0;
+    const card = document.getElementById("jokeCard");
+    const titleEl = document.getElementById("jokeTitle");
+    const contentEl = document.getElementById("jokeContent");
+    const numberEl = document.getElementById("jokeNumber");
+    const categoryEl = document.getElementById("jokeCategory");
+    const counterEl = document.getElementById("jokeCounter");
+
+    function updateJoke() {
+      const joke = jokes[jokeIndex];
+      titleEl.textContent = joke.title;
+      contentEl.textContent = joke.content;
+      numberEl.textContent = "#" + (jokeIndex + 1);
+      categoryEl.textContent = joke.category;
+      counterEl.textContent = `${jokeIndex + 1}/${jokes.length}`;
+    }
+
+    function changeBackground() {
+      const colors = [
+        "linear-gradient(to bottom right, #4f46e5, #8b5cf6)",
+        "linear-gradient(to bottom right, #10b981, #3b82f6)",
+        "linear-gradient(to bottom right, #ec4899, #fbbf24)",
+        "linear-gradient(to bottom right, #ef4444, #f97316)",
+        "linear-gradient(to bottom right, #6366f1, #14b8a6)",
+        "linear-gradient(to bottom right, #f59e0b, #84cc16)"
+      ];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      document.body.style.background = randomColor;
+    }
+
+    function nextJoke() {
+      card.classList.add("flipping");
+      setTimeout(() => {
+        jokeIndex = (jokeIndex + 1) % jokes.length;
+        updateJoke();
+        changeBackground();
+        card.classList.remove("flipping");
+      }, 600);
+    }
+
+    function prevJoke() {
+      card.classList.add("flipping");
+      setTimeout(() => {
+        jokeIndex = (jokeIndex - 1 + jokes.length) % jokes.length;
+        updateJoke();
+        changeBackground();
+        card.classList.remove("flipping");
+      }, 600);
+    }
+
+    // 初始化显示第一个笑话
+    updateJoke();
+    changeBackground();
+  </script>
+</body>
+</html>
